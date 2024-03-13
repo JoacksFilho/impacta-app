@@ -6,18 +6,20 @@ import {
     uniqueIndex,
   } from "drizzle-orm/pg-core";
   
-  export const users = pgTable(
-    "users",
+  export const flights = pgTable(
+    "flights",
     {
-      id: serial("id").primaryKey(),
-      name: text("name").notNull(),
-      email: text("email").notNull(),
-      image: text("image").notNull(),
+      flightId: serial("flightId").primaryKey(),
+      departureAirport: text("departureAirport").notNull(),
+      arrivalAirport: text("arrivalAirport").notNull(),
+      flightTime: text("flightTime").notNull(),
+      flightPrice: text("flightPrice").notNull(),
+      flightType:text("flightPrice").notNull(),
       createdAt: timestamp("createdAt").defaultNow().notNull(),
     },
-    (users) => {
+    (flights) => {
       return {
-        uniqueIdx: uniqueIndex("unique_idx").on(users.email),
+        uniqueIdx: uniqueIndex("unique_idx").on(flights.flightId),
       };
     }
   );
