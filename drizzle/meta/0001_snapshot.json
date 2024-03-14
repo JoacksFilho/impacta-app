@@ -1,0 +1,70 @@
+{
+  "id": "ae154913-2961-4fa8-b8ef-9725a9197bfe",
+  "prevId": "e2265c11-e9a0-482b-8f17-91223e7c47b0",
+  "version": "5",
+  "dialect": "pg",
+  "tables": {
+    "flights": {
+      "name": "flights",
+      "schema": "",
+      "columns": {
+        "flightId": {
+          "name": "flightId",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "departureAirport": {
+          "name": "departureAirport",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "arrivalAirport": {
+          "name": "arrivalAirport",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "flightTime": {
+          "name": "flightTime",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "flightPrice": {
+          "name": "flightPrice",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "unique_idx": {
+          "name": "unique_idx",
+          "columns": [
+            "flightId"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
