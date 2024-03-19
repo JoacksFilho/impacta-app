@@ -1,13 +1,38 @@
-import { getUsers } from "@/lib/db";
-import { useState } from "react";
+// import { getUsers } from "@/lib/db";
+// import { useState } from "react";
 
 const { getJson } = require("serpapi");
 const util = require("util");
+
+import { useEffect, useMemo } from "react";
+import AutocompleteInput from "./components/autocompleteAirports";
+import { Airports } from "./enums/airportsEnum";
+import { airportsService } from "./shared/services/api/axios-config/airports/airportsService";
+
+const aeroportosArray: string[] = Object.values(Airports);
+
+const flightTypes: string[] = ["Ida", "Ida e volta"];
 
 export default async function Home() {
   // const [apiResult, setApiResult] = useState();
 
   let aaa = {};
+
+  interface FlightData {
+    departureFlightId: string;
+    arrivalFlightId: string;
+  }
+
+  
+  useEffect(() => {
+    airportsService.getAll(1, flightSearch).then((result) => {
+      if (result instanceof Error) {
+        alert(result.message);
+        return;
+      }
+      console.log(result);
+    });
+  }, [flightSearch]);
 
   const data = await getJson(
     {
@@ -30,17 +55,25 @@ export default async function Home() {
 
   return (
     <div>
+      <div>
+        <AutocompleteInput options={aeroportosArray} label="Origem" />
+        <AutocompleteInput options={aeroportosArray} label="Destino" />
+        <AutocompleteInput options={flightTypes} label="Tipo de Voo" />
+
+        <input type="text" name="FlightSearch" />
+      </div>
+
       {data.best_flights.map((flight: any) => (
         <div className="mt-5">
-          {
-          JSON.stringify(flight.flights[0].departure_airport)} - {JSON.stringify(flight.flights[0].arrival_airport)}
-          {/* {flight.map((flightDetail: any) => (
+          {JSON.stringify(flight.flights[0].departure_airport)} -{" "}
+          {JSON.stringify(flight.flights[0].arrival_airport)}
+          {flight.map((flightDetail: any) => (
             <div>{flightDetail.departure_airport}</div>
-          ))} */}
+          ))}
         </div>
       ))}
-      {/* <div>sql-like: {JSON.stringify()}</div> */}
-      {/* <div>relational: {JSON.stringify(data)}</div> */}
+      {/* <div>sql-like: {JSON.stringify()}</div>  */}
+      <div>relational: {JSON.stringify(data)}</div>
     </div>
   );
 }
