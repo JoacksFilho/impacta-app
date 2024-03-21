@@ -4,8 +4,6 @@ import { sql } from "@vercel/postgres";
 import { airports } from "./schema";
 import * as schema from "./schema";
 
-
-
 export const db = drizzle(sql, { schema });
 
 export const getAirports = async () => {

@@ -6,6 +6,8 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
+import {InferModel} from "drizzle-orm"
+
 // export const flights = pgTable(
 //   "flights",
 //   {
@@ -37,4 +39,8 @@ export const airports = pgTable(
     };
   }
 );
+
+// export type Airport = InferModel<typeof airports>
+// export type newAirportType = InferModel<typeof airports, "insert">
+
 

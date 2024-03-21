@@ -12,13 +12,31 @@ import { Airports } from "./enums/airportsEnum";
 import { airportsService } from "./shared/services/api/axios-config/airports/airportsService";
 import { Button } from "@mui/material";
 import { getAirports } from "@/lib/db";
+import { GET } from "./api/connections/route";
 
-const aeroportosArray: string[] = Object.values(getAirports());
+const uri: string = "http://localhost:3000/api/connections";
+const encodedUri: string = encodeURI(uri);
 
 const flightTypes: string[] = ["Ida", "Ida e volta"];
 
 export default async function Home() {
-  // const [apiResult, setApiResult] = useState();
+
+  const [aeroportosArray, setAeroportosArray] = useState<any[]>([]); // Defina o estado para armazenar os aeroportos
+
+  useEffect(() => {
+      const fetchAeroportos = async () => {
+          try {
+        
+              const response = await fetch(encodedUri);
+              const data = await response.json();
+              setAeroportosArray(data); // Define os aeroportos no estado
+          } catch (error) {
+              console.error('Erro ao buscar aeroportos:', error);
+          }
+      };
+
+      fetchAeroportos(); // Chame a função de busca dos aeroportos ao montar o componente
+  }, []); // UseEffect com array vazio como segundo argumento para executar apenas uma vez ao montar o componente
 
   let aaa = {};
 
@@ -38,8 +56,6 @@ export default async function Home() {
   //     console.log(result);
   //   });
   // }, [flightSearch]);
-
-  useState;
 
   // const data = await getJson(
   //   {

@@ -8,7 +8,7 @@ interface NewAirport {
   airportName: string;
 }
 
-let airportId = 1;
+let airportId = 0;
 
 async function main() {
   for (const [code, name] of Object.entries(Airports)) {
