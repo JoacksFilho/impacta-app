@@ -1,14 +1,28 @@
-// import { NewUser, insertUser } from "@/lib/db";
+import Airports from "@/app/enums/airports";
+import { newAirport, insertAirport } from "@/lib/db";
 
-// async function main() {
-//   const newUser: NewUser = {
-//     email: "foo@example.com",
-//     image: "some image url",
-//     name: "foo",
-//   };
-//   const res = await insertUser(newUser);
-//   console.log("insert user success", res);
-//   process.exit();
-// }
+interface NewAirport {
+  airportId: number;
+  airportCode: string;
+  airportCity: string;
+  airportName: string;
+}
 
-// main();
+let airportId = 1;
+
+async function main() {
+  for (const [code, name] of Object.entries(Airports)) {
+    const newAirport: NewAirport = {
+      airportId: airportId++,
+      airportCode: code,
+      airportCity: name.split(",")[0],
+      airportName: name.split(",")[1],
+    };
+
+    const res = await insertAirport(newAirport);
+    console.log("Insert data success:", res);
+  }
+  process.exit();
+}
+
+main();

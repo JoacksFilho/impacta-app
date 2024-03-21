@@ -1,6 +1,6 @@
 {
-  "id": "9a5e4a9f-16b2-43f6-99bf-f411d4a9dd47",
-  "prevId": "ae154913-2961-4fa8-b8ef-9725a9197bfe",
+  "id": "b44202de-94ca-4137-9701-5da98cb37d3c",
+  "prevId": "e7e7ec44-575e-4823-bc41-ad799ace6033",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -8,10 +8,16 @@
       "name": "airports",
       "schema": "",
       "columns": {
-        "airportCode": {
-          "name": "airportCode",
+        "airportId": {
+          "name": "airportId",
           "type": "serial",
           "primaryKey": true,
+          "notNull": true
+        },
+        "airportCode": {
+          "name": "airportCode",
+          "type": "text",
+          "primaryKey": false,
           "notNull": true
         },
         "airportCity": {
@@ -27,15 +33,7 @@
           "notNull": true
         }
       },
-      "indexes": {
-        "unique_idx": {
-          "name": "unique_idx",
-          "columns": [
-            "airportCode"
-          ],
-          "isUnique": true
-        }
-      },
+      "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
