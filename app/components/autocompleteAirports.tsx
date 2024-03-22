@@ -10,15 +10,17 @@ interface AutocompleteInputProps {
     options: string[];
   }
 
-  const AutocompleteInput: React.FC<AutocompleteInputProps> = ({ label, options }) => {
+  const AutocompleteInput: React.FC<AutocompleteInputProps> = (props) => {
     return (
       <div>
         <Autocomplete
+        {...props}
           disablePortal
           id="combo-box-airports"
-          options={options}
+          options={props.options}
+        
           sx={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label={label} />}
+          renderInput={(params) => <TextField {...params} label={props.label} />}
         />
       </div>
     );
