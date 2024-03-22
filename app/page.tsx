@@ -19,9 +19,11 @@ const encodedUri: string = encodeURI(uri);
 
 const flightTypes: string[] = ["Ida", "Ida e volta"];
 
-export default async function Home() {
+export default function Home() {
 
   const [aeroportosArray, setAeroportosArray] = useState<any[]>([]); // Defina o estado para armazenar os aeroportos
+  const [selectedAirport, setSelectedAirport] = useState<any>({ ida: null, volta: null});
+  const [flights, setFlights] = useState<any>(null)
 
   useEffect(() => {
       const fetchAeroportos = async () => {
@@ -29,7 +31,8 @@ export default async function Home() {
         
               const response = await fetch(encodedUri);
               const data = await response.json();
-              setAeroportosArray(data); // Define os aeroportos no estado
+              console.log(data);
+              setAeroportosArray(data.allAirports.map((item) => ({ id: item.airportId, label: `${item.airportCity} - ${item.airportName}`, ...item}))); // Define os aeroportos no estado
           } catch (error) {
               console.error('Erro ao buscar aeroportos:', error);
           }
@@ -44,8 +47,9 @@ export default async function Home() {
   console.log('teste onClick')
  }
 
- function searchFlightSubmit(){
-  console.log('teste subit')
+ async function searchFlightSubmit(event){
+  event.preventDefault()
+  const data = fetch(`http://localhost:3000/api/getflights?ida=${selectedAirport.ida?.airportCode}&volta=${selectedAirport.volta?.airportCode}`).then((res) => res.json()).then((res) => setFlights(res));
  }
   // useEffect(() => {
   //   airportsService.getAll(1, flightSearch).then((result) => {
@@ -57,34 +61,17 @@ export default async function Home() {
   //   });
   // }, [flightSearch]);
 
-  // const data = await getJson(
-  //   {
-  //     api_key:
-  //       "fac25df631c63558122ebb31dc2132f84ad14b265f25934b34899ed36ba4574c",
-  //     engine: "google_flights",
-  //     departure_id: "CGH",
-  //     arrival_id: "SDU",
-  //     hl: "pt-br",
-  //     currency: "BRL",
-  //     outbound_date: "2024-04-20",
-  //     return_date: "2024-04-25",
-  //     stops: "0",
-  //     type: "1",
-  //   },
-  //   (results: JSON) => {
-  //     aaa = util.inspect(results, { depth: null, colors: true });
-  //   }
-  // );
+
 
   return (
     <form 
      onSubmit={searchFlightSubmit}
     >
       <div>
-        <AutocompleteInput options={aeroportosArray} label="Origem" />
-        <AutocompleteInput options={aeroportosArray} label="Destino" />
+        <AutocompleteInput options={aeroportosArray?? null} label="Origem" value={selectedAirport.ida} onChange={(e, value) => setSelectedAirport((prev) => ({...prev, ida: value}))} /><div>{`${selectedAirport?.ida?.airportCode}`}</div>
+        <AutocompleteInput options={aeroportosArray?? null} label="Destino"value={selectedAirport.volta} onChange={(e, value) => setSelectedAirport((prev) => ({...prev, volta: value}))} /><div>{`${selectedAirport?.volta?.airportCode}`}</div>
         <AutocompleteInput options={flightTypes} label="Tipo de Voo" />
-
+        <div>{`${JSON.stringify(selectedAirport)}`}</div>
         <Button
           type="submit"
           variant="outlined"
@@ -92,6 +79,7 @@ export default async function Home() {
         >
           Buscar
         </Button>
+        <div>{flights ? JSON.stringify(flights) : null}</div>
       </div>
       {/* 
       {data.best_flights.map((flight: any) => (
