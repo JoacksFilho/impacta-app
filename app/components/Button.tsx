@@ -11,13 +11,15 @@ interface ButtonConfig{
     onClick: React.MouseEventHandler<HTMLButtonElement>;
   }
 
-const FormButton: React.FC<ButtonConfig> = ({onClick }) => {
+ const FormButton: React.FC<ButtonConfig> = ({onClick }) => {
   return (
     <Stack spacing={2} direction="row">
      <Button
-     onClick={onClick}
+     
      />
       
     </Stack>
   );
 }
+
+export default FormButton;
