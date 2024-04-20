@@ -12,7 +12,8 @@ export async function GET(request: NextApiRequest){
         Origem_code: urlParams.get("ida"),
         Destino_code: urlParams.get("volta"),
         data_Ida:  urlParams.get("dataIda"),
-        data_Volta: urlParams.get("dataVolta")
+        data_Volta: urlParams.get("dataVolta"),
+        tipo_Voo: urlParams.get("tipoVoo")
     }
     console.log(options);
     const allFlights = await getJson(
@@ -27,7 +28,7 @@ export async function GET(request: NextApiRequest){
         outbound_date: options.data_Ida,
         return_date: options.data_Volta,
         stops: "0",
-        type: "1",
+        type: options.tipo_Voo,
     },
     (results: JSON) => {
         resultSeach = util.inspect(results, { depth: null, colors: true });

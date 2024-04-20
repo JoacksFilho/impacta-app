@@ -7,10 +7,10 @@ import DatePickerFormated from "./components/datePicker";
 import dayjs, { Dayjs } from "dayjs";
 import * as React from "react";
 import Stack from "@mui/material/Stack";
-import { flights } from "./../lib/schema";
 import { DataGrid, GridColDef } from "@mui/x-data-grid"; // Importe o componente DataGrid
 import {Box, Typography} from '@mui/material'
-
+import AppBarMenu from "./components/AppBar";
+import './styles.css';
 
 const uri: string = "http://localhost:3000/api/connections";
 const encodedUri: string = encodeURI(uri);
@@ -77,12 +77,29 @@ export default function Home() {
     fetchAeroportos();
   }, []);
 
+  const [selectedFlightType, setSelectedFlightType] = useState<string | null>(null);
+
+  const handleFlightTypeChange = (selectedType: string | null) => {
+    setSelectedFlightType(selectedType);
+  };
+
+
   async function searchFlightSubmit(event: React.FormEvent) {
     event.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3000/api/getFlights?ida=${selectedAirport.ida?.airportCode}&volta=${selectedAirport.volta?.airportCode}&dataIda=${selectedDateIda}&dataVolta=${selectedDateVolta}`);
+      const typeString = selectedFlightType === 'Ida' ? "2" : "1";
+      const response = await fetch(`http://localhost:3000/api/getFlights?ida=${selectedAirport.ida?.airportCode}&volta=${selectedAirport.volta?.airportCode}&dataIda=${selectedDateIda}&dataVolta=${selectedDateVolta}&tipoVoo=${typeString}`);
       const data = await response.json();
-      setFlights(data.best_flights);
+      console.log('Dados recebidos:', data); // Verificar os dados recebidos
+  
+      // Verificar se 'best_flights' existe nos dados recebidos
+      if (data && data.best_flights && Array.isArray(data.best_flights)) {
+        setFlights(data.best_flights);
+      } else {
+        console.error("Dados de voos recebidos estão incorretos:", data);
+      }
+      
+      console.log('Tipo selecionado:', typeString);
     } catch (error) {
       console.error("Erro ao buscar voos:", error);
     }
@@ -97,34 +114,41 @@ export default function Home() {
         <img src={params.row.logo_cia} alt="Cia. Aérea" style={{ width: '100%', height: 'auto' }} />
       )
     },
-    { field: 'airline', headerName: 'Cia. Aérea', width: 150, editable: false },
+    { field: 'airline', headerName: 'Cia. Aérea', width: 180, editable: false },
     { field: 'flight_number', headerName: 'Número Voo', width: 150, editable: true },
-    { field: 'departure_airport', headerName: 'Origem', width: 150, editable: true },
-    { field: 'departure_time', headerName: 'Departure Time', width: 180 },
-    { field: 'arrival_airport', headerName: 'Destino', width: 110, editable: true },
+    { field: 'departure_airport', headerName: 'Origem', width: 180, editable: true },
+    { field: 'departure_time', headerName: 'Departure Time', width: 150 },
+    { field: 'arrival_airport', headerName: 'Destino', width: 180, editable: true },
     { field: 'arrival_time', headerName: 'Arrival Time', width: 180 },
     { field: 'total_duration', headerName: 'Duração (min)', width: 150 },
     { field: 'price', headerName: 'Preço', width: 120 },
   ];
 
-  const rows = flights.map((flight: any, index: number) => ({
-    id: index,
-    logo_cia: flight.airline_logo,
-    airline: flight.flights[0].airline,
-    flight_number: flight.flights[0].flight_number,
-    airplane: flight.flights[0].airplane,
-    price: flight.price,
-    total_duration: flight.total_duration,
-    departure_airport: flight.flights[0].departure_airport.id,
-    departure_time: flight.flights[0].departure_airport.time.split(" ")[1],
-    arrival_airport: flight.flights[0].arrival_airport.id,
-    arrival_time: flight.flights[0].arrival_airport.time.split(" ")[1],
-  }));
+const headerClass = 'custom-header';
+const cellClass = 'custom-cell'
 
-  return (
-    <div className="container mx-auto mt-10">
+  const rows = flights.flatMap((flight: any, index: number) => {
+    return flight.flights.map((flightSegment: any, segmentIndex: number) => ({
+      id: `${index}-${segmentIndex}`, // Use um ID único para cada segmento de voo
+      logo_cia: flightSegment.airline_logo,
+      airline: flightSegment.airline,
+      flight_number: flightSegment.flight_number,
+      airplane: flightSegment.airplane,
+      price: flight.price,
+      total_duration: flight.total_duration,
+      departure_airport: flightSegment.departure_airport.id,
+      departure_time: flightSegment.departure_airport.time.split(" ")[1],
+      arrival_airport: flightSegment.arrival_airport.id,
+      arrival_time: flightSegment.arrival_airport.time.split(" ")[1],
+    }));
+  });
+  
+  return (   
+    <div>
+      <AppBarMenu/>       
+    <div className="container mx-auto mt-20">
       <div className="flex flex-col justify-evenly"> 
-      <form onSubmit={searchFlightSubmit} className="flex flex-col md:flex-row gap-4">
+      <form onSubmit={searchFlightSubmit} className="flex flex-col md:flex-row gap-4">     
         <div className="flex flex-row items-center justify-center gap-4">
         {/* <div className="flex items-center"> */}
           <AutocompleteInput 
@@ -147,7 +171,10 @@ export default function Home() {
           />   
         {/* </div> */}
         {/* <div className="flex items-center"> */}
-        <AutocompleteInput options={flightTypes} label="Tipo de Voo" />
+        <AutocompleteInput 
+        options={flightTypes} 
+        label="Tipo de Voo" 
+        onChange={handleFlightTypeChange} />
         {/* </div>                    */}
           {/* <div className="flex items-center"> */}
           <DatePickerFormated
@@ -170,12 +197,16 @@ export default function Home() {
           {/* </div>             */}
         </div>                    
       </form>
-      <Box sx={{ height: 600, width: "100%"}}>
+      <Box sx={{ height: 500, width: "100%"}}>
         <Typography variant="h5" align="center" mb={3}>        
         </Typography>
-        <DataGrid columns={columns} rows={rows} />
+        <DataGrid columns={columns} rows={rows}  
+        headerClassName={headerClass}        
+        cellClassName={cellClass} 
+        />
       </Box>
       </div>     
     </div>
+    </div>    
   );
 }
