@@ -11,6 +11,8 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid"; // Importe o componente
 import {Box, Typography} from '@mui/material'
 import AppBarMenu from "./components/AppBar";
 import './styles.css';
+import { Skeleton } from '@mui/material';
+import Image from "next/image";
 
 const uri: string = "http://localhost:3000/api/connections";
 const encodedUri: string = encodeURI(uri);
@@ -83,8 +85,12 @@ export default function Home() {
     setSelectedFlightType(selectedType);
   };
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  
 
   async function searchFlightSubmit(event: React.FormEvent) {
+    setIsLoading(true);
     event.preventDefault();
     try {
       const typeString = selectedFlightType === 'Ida' ? "2" : "1";
@@ -95,8 +101,10 @@ export default function Home() {
       // Verificar se 'best_flights' existe nos dados recebidos
       if (data && data.best_flights && Array.isArray(data.best_flights)) {
         setFlights(data.best_flights);
+        setIsLoading(false);
       } else {
         console.error("Dados de voos recebidos estão incorretos:", data);
+        setIsLoading(false);
       }
       
       console.log('Tipo selecionado:', typeString);
@@ -146,7 +154,7 @@ const cellClass = 'custom-cell'
   return (   
     <div>
       <AppBarMenu/>       
-    <div className="container mx-auto mt-20">
+    <div className="container mx-auto mt-14">
       <div className="flex flex-col justify-evenly"> 
       <form onSubmit={searchFlightSubmit} className="flex flex-col md:flex-row gap-4">     
         <div className="flex flex-row items-center justify-center gap-4">
@@ -196,14 +204,26 @@ const cellClass = 'custom-cell'
           </Button>
           {/* </div>             */}
         </div>                    
-      </form>
-      <Box sx={{ height: 500, width: "100%"}}>
-        <Typography variant="h5" align="center" mb={3}>        
-        </Typography>
-        <DataGrid columns={columns} rows={rows}  
-        headerClassName={headerClass}        
-        cellClassName={cellClass} 
-        />
+      </form>      
+      <Box sx={{ position: 'relative', height: 500, width: "100%", marginBottom: '10px' }}>
+        {isLoading ? ( 
+          <Skeleton animation="wave" height={500} /> 
+        ) : flights.length > 0 ? ( 
+          <>
+            <Typography variant="h5" align="center" mb={3}>        
+            </Typography>
+            <DataGrid 
+              columns={columns} 
+              rows={rows}  
+              headerClassName={headerClass}        
+              cellClassName={cellClass} 
+            />
+          </>
+        ) : ( 
+          <div style={{ position: 'relative', width: '100%', height: '100%', marginBottom: '10px'}}>
+            <Image src="/background.png" alt="Logo" layout="fill" objectFit="contain" />
+          </div>
+        )}
       </Box>
       </div>     
     </div>
