@@ -7,7 +7,7 @@ import DatePickerFormated from "./components/datePicker";
 import dayjs, { Dayjs } from "dayjs";
 import * as React from "react";
 import Stack from "@mui/material/Stack";
-import { DataGrid, GridColDef } from "@mui/x-data-grid"; // Importe o componente DataGrid
+import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid"; // Importe o componente DataGrid
 import {Box, Typography} from '@mui/material'
 import AppBarMenu from "./components/AppBar";
 import './styles.css';
@@ -150,6 +150,44 @@ const cellClass = 'custom-cell'
       arrival_time: flightSegment.arrival_airport.time.split(" ")[1],
     }));
   });
+
+  const [selectedRow, setSelectedRow] = useState<any | null>(null);
+
+  const handleRowSelection = (selectionModel: GridRowSelectionModel) => {
+    if (selectionModel.length > 0) {
+      const selectedId = selectionModel[0]; // Assumindo que apenas uma linha pode ser selecionada por vez
+      const selectedRowData = rows.find((row) => row.id === selectedId);
+      setSelectedRow(selectedRowData);
+    } else {
+      setSelectedRow(null);
+    }
+  };
+
+  const saveSelectedRow = async () => {
+    if (!selectedRow) {
+      console.error('Nenhuma linha selecionada');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/saveFlights', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(selectedRow),
+      });
+
+      if (response.ok) {
+        console.log('Dados salvos com sucesso');
+      } else {
+        console.error('Erro ao salvar dados');
+      }
+    } catch (error) {
+      console.error('Erro ao salvar dados:', error);
+    }
+  };
+
   
   return (   
     <div>
@@ -205,7 +243,7 @@ const cellClass = 'custom-cell'
           {/* </div>             */}
         </div>                    
       </form>      
-      <Box sx={{ position: 'relative', height: 500, width: "100%", marginBottom: '10px' }}>
+      {/* <Box sx={{ position: 'relative', height: 500, width: "100%", marginBottom: '10px' }}>
         {isLoading ? ( 
           <Skeleton animation="wave" height={500} /> 
         ) : flights.length > 0 ? ( 
@@ -213,10 +251,12 @@ const cellClass = 'custom-cell'
             <Typography variant="h5" align="center" mb={3}>        
             </Typography>
             <DataGrid 
-              columns={columns} 
-              rows={rows}  
-              headerClassName={headerClass}        
-              cellClassName={cellClass} 
+              columns={columns}
+              rows={rows}
+              headerClassName={headerClass}
+              cellClassName={cellClass}
+              onSelectionModelChange={handleRowSelection}
+              checkboxSelection
             />
           </>
         ) : ( 
@@ -224,7 +264,38 @@ const cellClass = 'custom-cell'
             <Image src="/background.png" alt="Logo" layout="fill" objectFit="contain" />
           </div>
         )}
-      </Box>
+      </Box> */}
+      <div className="mt-8">
+            {isLoading ? (
+              <Skeleton variant="rectangular" width="100%" height={400} />
+            ) : (
+              flights.length > 0 && (
+                <Box sx={{ height: 400, width: '100%' }}>
+                  <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    checkboxSelection
+                    onRowSelectionModelChange={(selectionModel) =>
+                      handleRowSelection(selectionModel as GridRowSelectionModel)
+                    }
+                  />
+                  <div className="mt-4">
+                  <Button
+                    size="large"
+                    onClick={saveSelectedRow}
+                    variant="outlined"
+                    color="primary"
+                    disabled={!selectedRow}
+                  >                                    
+                    Salvar Voo
+                  </Button>
+                  </div>
+                </Box>
+              )
+            )}
+          </div>
       </div>     
     </div>
     </div>    
