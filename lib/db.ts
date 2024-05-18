@@ -2,6 +2,7 @@ import "@/lib/config";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { sql } from "@vercel/postgres";
 import { airports } from "./schema";
+import { flights } from "./schema";
 import * as schema from "./schema";
 
 export const db = drizzle(sql, { schema });
@@ -14,11 +15,19 @@ export const getAirports = async () => {
 
 export type newAirport = typeof airports.$inferInsert;
 
-export const insertAirport = async (flight: newAirport) => {
-  return db.insert(airports).values(flight).returning();
+export const insertAirport = async (airport: newAirport) => {
+  return db.insert(airports).values(airport).returning();
 };
 
-// export const getUsers2 = async () => {
-//   const result = await db.query.flights.findMany();
-//   return result;
-// };
+
+export const getFlights = async () => {
+  const selectResult = await db.select().from(flights);
+  console.log("Results", selectResult);
+  return selectResult;
+};
+
+export type newFlight = typeof flights.$inferInsert;
+
+export const insertFlight = async (flight: newFlight) => {
+  return db.insert(flights).values(flight).returning();
+};

@@ -1,50 +1,43 @@
 {
-  "id": "e2265c11-e9a0-482b-8f17-91223e7c47b0",
+  "id": "85886729-0f78-4083-89a5-00c46cffab97",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
   "tables": {
-    "users": {
-      "name": "users",
+    "airports": {
+      "name": "airports",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
+        "airportId": {
+          "name": "airportId",
           "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
-        "name": {
-          "name": "name",
+        "airportCode": {
+          "name": "airportCode",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "email": {
-          "name": "email",
+        "airportCity": {
+          "name": "airportCity",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "image": {
-          "name": "image",
+        "airportName": {
+          "name": "airportName",
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
       "indexes": {
         "unique_idx": {
           "name": "unique_idx",
           "columns": [
-            "email"
+            "airportId"
           ],
           "isUnique": true
         }

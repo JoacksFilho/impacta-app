@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1710197592169,
-      "tag": "0000_burly_the_hunter",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1710901471673,
-      "tag": "0001_far_proteus",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1710902093775,
-      "tag": "0002_quick_tony_stark",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1710988493304,
-      "tag": "0003_free_captain_midlands",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1710989271303,
-      "tag": "0004_brainy_meggan",
+      "when": 1716061211128,
+      "tag": "0000_curious_starfox",
       "breakpoints": true
     }
   ]
