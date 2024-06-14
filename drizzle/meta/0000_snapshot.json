@@ -1,5 +1,5 @@
 {
-  "id": "85886729-0f78-4083-89a5-00c46cffab97",
+  "id": "9cade098-b37f-4b5c-a581-c7513bb59028",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -38,6 +38,79 @@
           "name": "unique_idx",
           "columns": [
             "airportId"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "flights": {
+      "name": "flights",
+      "schema": "",
+      "columns": {
+        "flightId": {
+          "name": "flightId",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "flightCompany": {
+          "name": "flightCompany",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "flightNumber": {
+          "name": "flightNumber",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "departureAirport": {
+          "name": "departureAirport",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "arrivalAirport": {
+          "name": "arrivalAirport",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "flightTime": {
+          "name": "flightTime",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "flightPrice": {
+          "name": "flightPrice",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "airlineLog": {
+          "name": "airlineLog",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "flight_unique_idx": {
+          "name": "flight_unique_idx",
+          "columns": [
+            "flightId"
           ],
           "isUnique": true
         }

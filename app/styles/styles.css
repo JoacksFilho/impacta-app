@@ -1,0 +1,38 @@
+.custom-header {
+    font-size: 16px; /* Tamanho da fonte */
+    font-weight: bold; /* Negrito */
+  }
+  
+  .custom-cell {
+    font-size: 14px; /* Tamanho da fonte */
+    /* Outros estilos de célula aqui, se necessário */
+  }
+  /* Adicione estilos específicos para a página Home aqui */
+
+.container {
+  padding: 20px;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.justify-evenly {
+  justify-content: space-evenly;
+}
+
+.mt-14 {
+  margin-top: 3.5rem;
+}

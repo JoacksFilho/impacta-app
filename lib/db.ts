@@ -28,6 +28,28 @@ export const getFlights = async () => {
 
 export type newFlight = typeof flights.$inferInsert;
 
-export const insertFlight = async (flight: newFlight) => {
-  return db.insert(flights).values(flight).returning();
-};
+// export const insertFlight = async (flight: newFlight) => {
+//   return db.insert(flights).values(flight).returning();
+// };
+
+export async function insertFlight(flightData: any) {
+  try {
+    const result = await db
+      .insert(flights)
+      .values({
+        departureAirport: flightData.departure_airport,
+        arrivalAirport: flightData.arrival_airport,
+        flightTime: `${flightData.departure_time} - ${flightData.arrival_time}`, // Combina departure_time e arrival_time
+        flightPrice: flightData.price.toString(), // Certifique-se de que flightPrice é um texto
+        flightCompany: flightData.airline, // Use o valor correto para flightCompany
+        flightNumber: flightData.flight_number, // Use o valor correto para flightNumber
+        airlineLog: flightData.logo_cia // Use o valor correto para airlineLogo
+      })
+      .returning();
+
+    return result;
+  } catch (error) {
+    console.error('Erro na função insertFlight:', error);
+    throw new Error('Erro ao inserir voo no banco de dados');
+  }
+}

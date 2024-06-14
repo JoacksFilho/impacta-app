@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* 
+globals.css
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+  
+  .content {
+    padding: 20px; /* Ajuste conforme necessário */
+   */
+
+   /* globals.css ou styles.css */
+
+/* Estilos Globais */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+html, body, #__next {
+  height: 100%;
+}
+
+.content {
+  padding: 20px; /* Ajuste conforme necessário */
+}
+
+/* Estilos Específicos para Home */
+.container {
+  padding: 0; /* Remover preenchimento se necessário */
+  margin: 0;  /* Remover margens se necessário */
+}
+
+.mt-14 {
+  margin-top: 14px; /* Ajuste conforme necessário */
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.justify-evenly {
+  justify-content: space-evenly;
+}
